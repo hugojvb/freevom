@@ -3,6 +3,8 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+node
+.apt_gemerated_tests
 
 ### STS ###
 .apt_generated
