@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class VideoService {
     
-    @NonNull private s3Service s3Service;
+    private final S3Service s3Service;
 
     public void uploadVideo(MultipartFile file) {
         String videoUrl = s3Service.uploadFile(file);
