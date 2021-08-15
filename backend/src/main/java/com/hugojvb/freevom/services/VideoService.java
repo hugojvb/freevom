@@ -1,13 +1,20 @@
 package com.hugojvb.freevom.services;
 
+import com.hugojvb.freevom.models.Video;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class VideoService {
     
-    public void uploadVideo(MultipartFile multipartFile) {
-        // UPLOAD FILE TO S3
-        // SAVE VIDEO IN DB
+    @NonNull private s3Service s3Service;
+
+    public void uploadVideo(MultipartFile file) {
+        String videoUrl = s3Service.uploadFile(file);
+        var video = new Video();
+        video.setVideoUrl(videoUrl);
     }
 }

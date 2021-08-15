@@ -10,16 +10,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class s3Service implements FileService{
-    private final AmazonS3Client amazonS3Client; 
+    @NonNull private AmazonS3Client amazonS3Client; 
     private static final String BUCKET_NAME = "freevom";
     
-    public s3Service(AmazonS3Client amazonS3Client) {
-        this.amazonS3Client = amazonS3Client;
-    }
-
     @Override
     public String uploadFile(MultipartFile file) {
 
