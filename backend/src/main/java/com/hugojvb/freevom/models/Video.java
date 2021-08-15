@@ -3,7 +3,15 @@ package com.hugojvb.freevom.models;
 import java.util.List;
 import java.util.Set;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Document(value = "Video")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Video {
 
 	@Id
