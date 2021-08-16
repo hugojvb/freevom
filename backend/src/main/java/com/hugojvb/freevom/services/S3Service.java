@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class S3Service implements FileService{
+public class S3Service implements FileInterface{
     @NonNull private AmazonS3Client amazonS3Client; 
     private static final String BUCKET_NAME = "freevom";
     
@@ -24,7 +24,7 @@ public class S3Service implements FileService{
 
         var fileNameExtension = StringUtils.getFilename(file.getOriginalFilename());
 
-        var key = UUID.randomUUID().toString() + fileNameExtension;
+        var key = UUID.randomUUID().toString() + "." + fileNameExtension;
 
         var metadata = new ObjectMetadata();
         metadata.setContentLength(file.getSize());

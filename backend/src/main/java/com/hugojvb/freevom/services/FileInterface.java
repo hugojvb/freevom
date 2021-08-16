@@ -2,7 +2,7 @@ package com.hugojvb.freevom.services;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public interface FileService {
+public interface FileInterface {
     
     String uploadFile(MultipartFile file);
 }
