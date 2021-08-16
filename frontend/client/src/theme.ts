@@ -12,6 +12,6 @@ export const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: "Roboto",
+    fontFamily: "Roboto, Arial, Helvetica, sans-serif",
   },
 });
