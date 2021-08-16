@@ -63,7 +63,11 @@ const Upload = () => {
 
   const submitUpload = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const res = await axios.post("/api/video", { file: chosenFile });
+    var bodyFormData = new FormData();
+    if (droppedFiles !== undefined) {
+      bodyFormData.append("file", droppedFiles[0]);
+    }
+    const res = await axios.post("/api/video", bodyFormData);
   };
 
   return (
