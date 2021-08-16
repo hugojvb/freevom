@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, SyntheticEvent } from "react";
 
 import { useDrop } from "react-dnd";
 import { NativeTypes } from "react-dnd-html5-backend";
@@ -14,6 +14,7 @@ import {
   makeStyles,
   Grid,
 } from "@material-ui/core";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -26,7 +27,8 @@ const useStyles = makeStyles((theme) => {
 const Upload = () => {
   const [droppedFiles, setDroppedFiles] = useState<File[]>([]);
   const [chosenFile, setChosenFile] = useState<FileList | null>();
-  const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState<boolean>(false);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
 
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -36,8 +38,8 @@ const Upload = () => {
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: [NativeTypes.FILE],
     drop(item: { files: any[] }) {
-      setDroppedFiles(item.files);
       setChosenFile(null);
+      setDroppedFiles(item.files);
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -51,13 +53,17 @@ const Upload = () => {
   // MOUNTED COMPONENT
   useEffect(() => {
     setMounted(true);
-  });
+  }, [setMounted]);
 
-  console.log("render");
-
+  // FILE INPUT CHANGE
   const handleFileChange = (target: HTMLInputElement) => {
-    setChosenFile(target.files);
     setDroppedFiles([]);
+    setChosenFile(target.files);
+  };
+
+  const submitUpload = async (e: SyntheticEvent) => {
+    e.preventDefault();
+    const res = await axios.post("/api/video", { file: chosenFile });
   };
 
   return (
@@ -84,7 +90,7 @@ const Upload = () => {
                 {mounted && (
                   <input
                     type="file"
-                    accept="video/mp4"
+                    accept="video/*"
                     className={classes.fileInput}
                     id="upload_file"
                     ref={fileInput}
@@ -92,7 +98,7 @@ const Upload = () => {
                   />
                 )}
                 <label htmlFor="upload_file">
-                  <Button variant="contained" color="primary" component="span">
+                  <Button variant="outlined" color="secondary" component="span">
                     Select a file
                   </Button>
                 </label>
@@ -108,13 +114,23 @@ const Upload = () => {
                         </ListItem>
                       ))
                     : chosenFile && (
-                        <ListItem>
+                        <ListItem key={chosenFile[0]?.name}>
                           <Typography variant="h6" align="center">
-                            {chosenFile[0].name}
+                            {chosenFile[0]?.name}
                           </Typography>
                         </ListItem>
                       )}
                 </List>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={submitUpload}
+                  component="button"
+                >
+                  {isUploading ? "Uploading..." : "Upload"}
+                </Button>
               </Grid>
             </Grid>
           </CardContent>
