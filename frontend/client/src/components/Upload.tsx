@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => {
 
 const Upload = () => {
   const [droppedFiles, setDroppedFiles] = useState<File[]>([]);
-  const [chosenFile, setChosenFile] = useState<FileList | null>();
+  const [chosenFile, setChosenFile] = useState<File[]>([]);
   const [mounted, setMounted] = useState<boolean>(false);
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
@@ -38,7 +38,7 @@ const Upload = () => {
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: [NativeTypes.FILE],
     drop(item: { files: any[] }) {
-      setChosenFile(null);
+      setChosenFile([]);
       setDroppedFiles(item.files);
     },
     collect: (monitor) => ({
@@ -58,16 +58,25 @@ const Upload = () => {
   // FILE INPUT CHANGE
   const handleFileChange = (target: HTMLInputElement) => {
     setDroppedFiles([]);
-    setChosenFile(target.files);
+    if (target.files) setChosenFile([target.files[0]]);
   };
 
   const submitUpload = async (e: SyntheticEvent) => {
     e.preventDefault();
-    var bodyFormData = new FormData();
-    if (droppedFiles !== undefined) {
-      bodyFormData.append("file", droppedFiles[0]);
+    try {
+      setIsUploading(true);
+      var bodyFormData = new FormData();
+      if (droppedFiles.length !== 0) {
+        bodyFormData.append("file", droppedFiles[0]);
+      } else if (chosenFile.length !== 0) {
+        bodyFormData.append("file", chosenFile[0]);
+      }
+
+      const res = await axios.post("/api/video", bodyFormData);
+      setIsUploading(false);
+    } catch (error) {
+      setIsUploading(false);
     }
-    const res = await axios.post("/api/video", bodyFormData);
   };
 
   return (
