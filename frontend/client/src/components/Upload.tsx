@@ -166,6 +166,7 @@ const Upload = () => {
                   color="primary"
                   onClick={submitUpload}
                   component="button"
+                  disabled={chosenFile.length === 0 && droppedFile.length === 0}
                 >
                   {isUploading ? "Uploading..." : "Upload"}
                 </Button>
@@ -176,12 +177,12 @@ const Upload = () => {
       </Card>
       <Snackbar TransitionComponent={Fade} open={successAlert}>
         <Alert onClose={handleClose} severity="success">
-          Your video was uploaded successfully
+          Your video was uploaded successfully!
         </Alert>
       </Snackbar>
       <Snackbar TransitionComponent={Fade} open={errorAlert}>
         <Alert onClose={handleClose} severity="error">
-          Something went wrong
+          Something went wrong while uploading your video!
         </Alert>
       </Snackbar>
     </Container>
