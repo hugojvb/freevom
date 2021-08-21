@@ -84,11 +84,9 @@ const Upload = () => {
       setChosenFile([]);
       setIsUploading(false);
       setSuccessAlert(true);
-      setTimeout(() => setSuccessAlert(false), 3000);
     } catch (error) {
       setIsUploading(false);
       setErrorAlert(true);
-      setTimeout(() => setErrorAlert(false), 3000);
     }
   };
 
@@ -175,13 +173,21 @@ const Upload = () => {
           </CardContent>
         </div>
       </Card>
-      <Snackbar TransitionComponent={Fade} open={successAlert}>
-        <Alert onClose={handleClose} severity="success">
-          Your video was uploaded successfully!
-        </Alert>
+      <Snackbar
+        TransitionComponent={Fade}
+        autoHideDuration={3000}
+        onClose={handleClose}
+        open={successAlert}
+      >
+        <Alert severity="success">Your video was uploaded successfully!</Alert>
       </Snackbar>
-      <Snackbar TransitionComponent={Fade} open={errorAlert}>
-        <Alert onClose={handleClose} severity="error">
+      <Snackbar
+        TransitionComponent={Fade}
+        autoHideDuration={3000}
+        onClose={handleClose}
+        open={errorAlert}
+      >
+        <Alert severity="error">
           Something went wrong while uploading your video!
         </Alert>
       </Snackbar>
