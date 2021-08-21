@@ -65,6 +65,7 @@ const Upload = () => {
     if (target.files) setChosenFile([target.files[0]]);
   };
 
+  // SUBMIT UPLOAD
   const submitUpload = async (e: SyntheticEvent) => {
     e.preventDefault();
     try {
@@ -80,13 +81,14 @@ const Upload = () => {
       setDroppedFile([]);
       setChosenFile([]);
       setIsUploading(false);
+      setOpenAlert(true);
     } catch (error) {
       setIsUploading(false);
     }
   };
 
   // HANDLE SNACKBAR CLOSE
-  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+  const handleClose = (event?: SyntheticEvent, reason?: string) => {
     if (reason === "clickaway") {
       return;
     }
