@@ -30,7 +30,7 @@ const Navbar = () => {
   const classes = useStyles();
 
   return (
-    <AppBar position="sticky" elevation={0} className={classes.navbarContainer}>
+    <AppBar position="sticky" elevation={1} className={classes.navbarContainer}>
       <Toolbar>
         <IconButton
           edge="start"

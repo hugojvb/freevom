@@ -13,7 +13,10 @@ import {
   Button,
   makeStyles,
   Grid,
+  Snackbar,
 } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
+
 import axios from "axios";
 
 const useStyles = makeStyles((theme) => {
@@ -25,10 +28,11 @@ const useStyles = makeStyles((theme) => {
 });
 
 const Upload = () => {
-  const [droppedFiles, setDroppedFiles] = useState<File[]>([]);
+  const [droppedFile, setDroppedFile] = useState<File[]>([]);
   const [chosenFile, setChosenFile] = useState<File[]>([]);
   const [mounted, setMounted] = useState<boolean>(false);
   const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [openAlert, setOpenAlert] = useState<boolean>(false);
 
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -39,7 +43,7 @@ const Upload = () => {
     accept: [NativeTypes.FILE],
     drop(item: { files: any[] }) {
       setChosenFile([]);
-      setDroppedFiles(item.files);
+      setDroppedFile(item.files);
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -57,7 +61,7 @@ const Upload = () => {
 
   // FILE INPUT CHANGE
   const handleFileChange = (target: HTMLInputElement) => {
-    setDroppedFiles([]);
+    setDroppedFile([]);
     if (target.files) setChosenFile([target.files[0]]);
   };
 
@@ -66,22 +70,36 @@ const Upload = () => {
     try {
       setIsUploading(true);
       var bodyFormData = new FormData();
-      if (droppedFiles.length !== 0) {
-        bodyFormData.append("file", droppedFiles[0]);
+      if (droppedFile.length !== 0) {
+        bodyFormData.append("file", droppedFile[0]);
       } else if (chosenFile.length !== 0) {
         bodyFormData.append("file", chosenFile[0]);
       }
 
       await axios.post("/api/video", bodyFormData);
+      setDroppedFile([]);
+      setChosenFile([]);
       setIsUploading(false);
     } catch (error) {
       setIsUploading(false);
     }
   };
 
+  // HANDLE SNACKBAR CLOSE
+  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenAlert(false);
+  };
+
   return (
     <Container maxWidth="md">
-      <Card style={{ backgroundColor: isActive ? "#eee" : "#fff" }}>
+      <Card
+        style={{ backgroundColor: isActive ? "#eee" : "#fff" }}
+        elevation={1}
+      >
         <div ref={drop}>
           <CardContent>
             <Grid
@@ -118,8 +136,8 @@ const Upload = () => {
               </Grid>
               <Grid item>
                 <List>
-                  {droppedFiles.length > 0
-                    ? droppedFiles.map((file) => (
+                  {droppedFile.length > 0
+                    ? droppedFile.map((file) => (
                         <ListItem key={file.name}>
                           <Typography variant="h6" align="center">
                             {file.name}
@@ -149,6 +167,11 @@ const Upload = () => {
           </CardContent>
         </div>
       </Card>
+      <Snackbar open={openAlert}>
+        <Alert onClose={handleClose} severity="success">
+          Your video was uploaded successfully
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
