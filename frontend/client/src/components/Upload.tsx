@@ -72,7 +72,7 @@ const Upload = () => {
         bodyFormData.append("file", chosenFile[0]);
       }
 
-      const res = await axios.post("/api/video", bodyFormData);
+      await axios.post("/api/video", bodyFormData);
       setIsUploading(false);
     } catch (error) {
       setIsUploading(false);
