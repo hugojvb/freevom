@@ -14,6 +14,7 @@ import {
   makeStyles,
   Grid,
   Snackbar,
+  Fade,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 
@@ -32,7 +33,8 @@ const Upload = () => {
   const [chosenFile, setChosenFile] = useState<File[]>([]);
   const [mounted, setMounted] = useState<boolean>(false);
   const [isUploading, setIsUploading] = useState<boolean>(false);
-  const [openAlert, setOpenAlert] = useState<boolean>(false);
+  const [successAlert, setSuccessAlert] = useState<boolean>(false);
+  const [errorAlert, setErrorAlert] = useState<boolean>(false);
 
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -81,9 +83,12 @@ const Upload = () => {
       setDroppedFile([]);
       setChosenFile([]);
       setIsUploading(false);
-      setOpenAlert(true);
+      setSuccessAlert(true);
+      setTimeout(() => setSuccessAlert(false), 3000);
     } catch (error) {
       setIsUploading(false);
+      setErrorAlert(true);
+      setTimeout(() => setErrorAlert(false), 3000);
     }
   };
 
@@ -93,7 +98,7 @@ const Upload = () => {
       return;
     }
 
-    setOpenAlert(false);
+    setSuccessAlert(false);
   };
 
   return (
@@ -169,9 +174,14 @@ const Upload = () => {
           </CardContent>
         </div>
       </Card>
-      <Snackbar open={openAlert}>
+      <Snackbar TransitionComponent={Fade} open={successAlert}>
         <Alert onClose={handleClose} severity="success">
           Your video was uploaded successfully
+        </Alert>
+      </Snackbar>
+      <Snackbar TransitionComponent={Fade} open={errorAlert}>
+        <Alert onClose={handleClose} severity="error">
+          Something went wrong
         </Alert>
       </Snackbar>
     </Container>
